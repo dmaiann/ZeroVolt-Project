@@ -4,12 +4,13 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import NavbarUser from "./components/NavbarUser";
 import MainLayout from "./components/MainLayout";
-import AboutPage from "./components/About";
-import Footer from "./components/Footer";
-import HomePage from "./components/BerandaUser";
 
-// PAGES
+// Pages
+import HomePage from "./components/BerandaUser";
+import AboutPage from "./components/About";
+import ProductsPage from "./components/Product";
 import CheckoutPage from "./pages/Checkout";
+import PaymentLoading from "./pages/PaymentLoading";
 import OrderSuccess from "./pages/OrderSucces";
 
 function App() {
@@ -17,64 +18,54 @@ function App() {
 
   return (
     <>
-      {/* ================= NAVBAR ================= */}
+      {/* NAVBAR */}
       {user ? (
         <NavbarUser user={user} setUser={setUser} />
       ) : (
         <Navbar setUser={setUser} />
       )}
 
-      {/* ================= ROUTES ================= */}
       <Routes>
-        {/* ================= HOME ================= */}
-        <Route
-          path="/"
-          element={
-            user ? (
-              <HomePage />
-            ) : (
-              <MainLayout>
-                <Footer />
-              </MainLayout>
-            )
-          }
-        />
+        {/* ================= GUEST ROUTES ================= */}
+        {!user && (
+          <>
+            <Route
+              path="/"
+              element={
+                <MainLayout>
+                  {/* Landing page kosong atau custom hero bisa ditambahkan */}
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/products"
+              element={
+                <MainLayout>
+                  {/* Bisa tambahkan versi produk guest */}
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <MainLayout>
+                  <AboutPage />
+                </MainLayout>
+              }
+            />
+          </>
+        )}
 
-        {/* ================= PRODUCTS ================= */}
-        <Route
-          path="/products"
-          element={
-            user ? (
-              <HomePage />
-            ) : (
-              <MainLayout>
-                <Footer />
-              </MainLayout>
-            )
-          }
-        />
-
-        {/* ================= ABOUT ================= */}
-        <Route
-          path="/about"
-          element={
-            <MainLayout>
-              <AboutPage />
-            </MainLayout>
-          }
-        />
-
-        {/* ================= CHECKOUT (PROTECTED) ================= */}
-        <Route
-          path="/checkout"
-          element={user ? <CheckoutPage /> : <Navigate to="/" replace />}
-        />
-
-        {/* ================= ORDER SUCCESS (PROTECTED) ================= */}
-        <Route
-          path="/order-success"
-          element={user ? <OrderSuccess /> : <Navigate to="/" replace />}
-        />
+        {/* ================= USER ROUTES ================= */}
+        {user && (
+          <>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/payment" element={<PaymentLoading />} />
+            <Route path="/order-success" element={<OrderSuccess />} />
+          </>
+        )}
 
         {/* ================= FALLBACK ================= */}
         <Route path="*" element={<Navigate to="/" replace />} />

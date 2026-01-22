@@ -17,18 +17,17 @@ export default function Footer() {
     {
       name: "Smartphone X12",
       price: "$899",
-      image: "./src/image/google-pixel-7-pro-mockup.png",
+      image: "./images/products/iphone.jpeg",
     },
     {
       name: "Laptop Pro 15",
       price: "$1299",
-      image: "./src/image/laptop-near-cacti.png",
+      image: "./images/products/laptop.jpeg",
     },
     {
       name: "Smartwatch Z",
       price: "$299",
-      image:
-        "./src/image/realistic-smartwatch-with-black-band-colorful-digital-display (1).png",
+      image: "./images/products/smart.jpeg",
     },
   ];
 

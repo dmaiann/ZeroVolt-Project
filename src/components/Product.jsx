@@ -2,17 +2,39 @@ import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart, Info, ChevronLeft, ChevronRight } from "lucide-react";
 
+/* ================= DATA ================= */
 const PRODUCTS = [
-  { name: "ZeroVolt Pro Smartphone", price: "$999", badge: "New" },
-  { name: "ZeroVolt Ultra Laptop", price: "$1,499", badge: "Best Seller" },
-  { name: "ZeroVolt Headphones X", price: "$299" },
-  { name: "ZeroVolt Smart Watch", price: "$399", badge: "New" },
-  { name: "ZeroVolt Earbuds", price: "$199" },
-  { name: "ZeroVolt Gaming Laptop", price: "$2,099" },
-  { name: "ZeroVolt Audio Speaker", price: "$249" },
-  { name: "ZeroVolt Tablet", price: "$549" },
+  {
+    name: "Samsung S24 Ultra",
+    price: "$999",
+    badge: "New",
+    image: "/images/products/samsang.jpeg",
+  },
+  {
+    name: "Asus ZenBook Pro",
+    price: "$1,499",
+    badge: "Best Seller",
+    image: "/images/products/laptop.jpeg",
+  },
+  {
+    name: "Apple Watch Series 9",
+    price: "$399",
+    badge: "New",
+    image: "/images/products/smart.jpeg",
+  },
+  {
+    name: "EarPods Pro",
+    price: "$199",
+    image: "/images/products/earphone.jpeg",
+  },
+  {
+    name: "Legion Y540 Gaming Laptop",
+    price: "$2,099",
+    image: "/images/products/gaming.jpeg",
+  },
 ];
 
+/* ================= ANIMATION VARIANTS ================= */
 const cardVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: (i) => ({
@@ -22,6 +44,7 @@ const cardVariants = {
   }),
 };
 
+/* ================= PAGE ================= */
 export default function ProductPage() {
   const scrollRef = useRef(null);
 
@@ -70,10 +93,14 @@ export default function ProductPage() {
 
                 {/* Floating Product Image */}
                 <motion.div
-                  className="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 md:w-44 md:h-44 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-black/20 font-medium shadow-lg z-10"
+                  className="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 md:w-44 md:h-44 rounded-2xl flex items-center justify-center shadow-lg z-10 bg-white"
                   whileHover={{ y: -10, scale: 1.06 }}
                 >
-                  Product Image
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-contain rounded-2xl"
+                  />
                 </motion.div>
 
                 {/* Product Info */}
@@ -85,7 +112,7 @@ export default function ProductPage() {
                     {product.price}
                   </p>
 
-                  {/* Tombol diperbaiki: proporsional dan seimbang */}
+                  {/* Buttons */}
                   <div className="flex gap-3 justify-center mt-3">
                     <button className="flex-none bg-black text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-900 transition flex items-center justify-center gap-2 text-sm md:text-base">
                       <ShoppingCart size={18} /> Beli Sekarang

@@ -1,73 +1,70 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle, ArrowRight, ShoppingBag, Home } from "lucide-react";
-
+import { CheckCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import Confetti from "react-confetti";
 
-/* ================= PAGE ================= */
+const CART_ITEMS = [{ id: 1, name: "Samsung S24 Ultra", price: 999, qty: 1 }];
 
 export default function OrderSuccess() {
-  const orderId = "ZV-2026-000123"; // nanti bisa dari backend / params
+  const navigate = useNavigate();
+  const [confettiActive, setConfettiActive] = useState(true);
+
+  const subtotal = CART_ITEMS.reduce((sum, i) => sum + i.price * i.qty, 0);
+  const shipping = 25;
+  const total = subtotal + shipping;
+
+  useEffect(() => {
+    const timer = setTimeout(() => setConfettiActive(false), 7000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div className="bg-white min-h-screen flex items-center justify-center px-6">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white px-6 relative">
+      {confettiActive && (
+        <Confetti
+          width={window.innerWidth}
+          height={window.innerHeight}
+          recycle={false}
+          numberOfPieces={250}
+          gravity={0.3}
+        />
+      )}
+
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="max-w-xl w-full bg-neutral-100 rounded-3xl p-12 text-center shadow-xl"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="bg-white/90 backdrop-blur-xl p-12 rounded-3xl shadow-2xl flex flex-col items-center space-y-6 relative w-full max-w-md"
       >
-        {/* ICON */}
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: "spring" }}
-          className="flex justify-center mb-6"
-        >
-          <CheckCircle size={72} className="text-green-500" />
-        </motion.div>
-
-        {/* TITLE */}
-        <h1 className="text-3xl font-bold mb-3">Order Successful 🎉</h1>
-
-        <p className="text-black/70 mb-6">
-          Thank you for shopping with <b>ZeroVolt</b>. Your order has been
-          placed successfully.
+        <CheckCircle className="w-20 h-20 text-green-500 animate-bounce" />
+        <h1 className="text-3xl font-bold text-center">Order Successful!</h1>
+        <p className="text-black/70 text-center">
+          Thank you for your purchase. Your order is confirmed.
         </p>
 
-        {/* ORDER ID */}
-        <div className="bg-white rounded-2xl py-4 px-6 mb-8">
-          <p className="text-sm text-black/50">Order ID</p>
-          <p className="font-semibold text-lg tracking-wide">{orderId}</p>
+        <div className="w-full bg-neutral-100 rounded-xl p-4 space-y-2">
+          {CART_ITEMS.map((item) => (
+            <div key={item.id} className="flex justify-between text-sm">
+              <span>
+                {item.name} × {item.qty}
+              </span>
+              <span>${item.price * item.qty}</span>
+            </div>
+          ))}
+          <div className="flex justify-between font-semibold border-t pt-2">
+            <span>Total</span>
+            <span>${total}</span>
+          </div>
         </div>
 
-        {/* CTA */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Button
-            className="flex-1 bg-black text-white rounded-full h-12 hover:bg-black/90"
-            asChild
-          >
-            <a href="/products">
-              Continue Shopping <ArrowRight className="ml-2" size={18} />
-            </a>
-          </Button>
-
-          <Button
-            variant="outline"
-            className="flex-1 rounded-full h-12"
-            asChild
-          >
-            <a href="/">
-              <Home size={18} className="mr-2" /> Back to Home
-            </a>
-          </Button>
-        </div>
-
-        {/* INFO */}
-        <div className="flex items-center justify-center gap-2 mt-8 text-sm text-black/60">
-          <ShoppingBag size={16} />
-          <span>You’ll receive an email confirmation shortly.</span>
-        </div>
+        <Button
+          onClick={() => navigate("/")}
+          className="w-full bg-black text-white hover:bg-black/90 rounded-full h-12 mt-4 shadow-lg hover:shadow-xl transition"
+        >
+          Back to Home
+        </Button>
       </motion.div>
     </div>
   );
