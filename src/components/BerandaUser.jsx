@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom"; // ✅ TAMBAHAN
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,7 +19,6 @@ import {
 
 const CATEGORIES = ["All", "Smartphone", "Laptop", "Watch", "Audio"];
 
-// Fallback jika API belum aktif
 const PRODUCTS = [
   {
     name: "ZeroVolt Pro Smartphone",
@@ -122,25 +122,19 @@ function Footer() {
 /* ================= PAGE ================= */
 
 export default function HomePage() {
+  const navigate = useNavigate(); // ✅ TAMBAHAN
+
   const [category, setCategory] = useState("All");
   const [promo, setPromo] = useState(0);
   const [review, setReview] = useState(0);
-
-  // Products dari API
   const [products, setProducts] = useState(PRODUCTS);
 
   /* ================= API CONNECT ================= */
   useEffect(() => {
     fetch("http://localhost:3001/api/products")
       .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setProducts(data);
-        }
-      })
-      .catch(() => {
-        console.log("API belum aktif, pakai data lokal");
-      });
+      .then((data) => Array.isArray(data) && data.length && setProducts(data))
+      .catch(() => console.log("API belum aktif, pakai data lokal"));
   }, []);
 
   useEffect(() => {
@@ -159,6 +153,11 @@ export default function HomePage() {
     category === "All"
       ? products
       : products.filter((p) => p.category === category);
+
+  // ✅ HANDLER PINDAH KE CHECKOUT
+  const goCheckout = (product) => {
+    navigate("/checkout", { state: product });
+  };
 
   return (
     <div className="bg-white min-h-screen pt-24 space-y-32">
@@ -236,6 +235,7 @@ export default function HomePage() {
               <h3 className="font-semibold">{p.name}</h3>
               <p className="text-black/70 mb-4">{p.price}</p>
 
+              {/* ✅ HANYA BAGIAN INI YANG DITAMBAH */}
               <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition">
                 <Button size="icon" variant="outline">
                   <Heart size={16} />
@@ -243,7 +243,12 @@ export default function HomePage() {
                 <Button size="icon" variant="outline">
                   <Eye size={16} />
                 </Button>
-                <Button className="bg-black text-white flex-1">Add</Button>
+                <Button
+                  className="bg-black text-white flex-1"
+                  onClick={() => goCheckout(p)}
+                >
+                  Add
+                </Button>
               </div>
             </motion.div>
           ))}

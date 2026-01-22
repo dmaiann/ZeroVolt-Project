@@ -6,49 +6,29 @@ import NavbarUser from "./components/NavbarUser";
 import MainLayout from "./components/MainLayout";
 import AboutPage from "./components/About";
 import Footer from "./components/Footer";
-import HomePage from "./components/BerandaUser"; // halaman beranda khusus user
+import HomePage from "./components/BerandaUser";
+
+// PAGES
+import CheckoutPage from "./pages/Checkout";
+import OrderSuccess from "./pages/OrderSucces";
 
 function App() {
-  const [user, setUser] = useState(null); // state login user
+  const [user, setUser] = useState(null);
 
   return (
     <>
-      {/* Navbar dinamis */}
+      {/* ================= NAVBAR ================= */}
       {user ? (
         <NavbarUser user={user} setUser={setUser} />
       ) : (
         <Navbar setUser={setUser} />
       )}
 
+      {/* ================= ROUTES ================= */}
       <Routes>
-        {/* Homepage */}
-        <Route path="/" element={user ? <HomePage /> : <MainLayout />} />
-
-        {/* Products page */}
+        {/* ================= HOME ================= */}
         <Route
-          path="/products"
-          element={user ? <HomePage /> : <MainLayout />}
-        />
-
-        {/* AboutPage */}
-        <Route
-          path="/about"
-          element={
-            user ? (
-              <MainLayout user={user}>
-                <AboutPage />
-              </MainLayout>
-            ) : (
-              <MainLayout>
-                <AboutPage />
-              </MainLayout>
-            )
-          }
-        />
-
-        {/* Catch-all untuk Footer */}
-        <Route
-          path="*"
+          path="/"
           element={
             user ? (
               <HomePage />
@@ -59,6 +39,45 @@ function App() {
             )
           }
         />
+
+        {/* ================= PRODUCTS ================= */}
+        <Route
+          path="/products"
+          element={
+            user ? (
+              <HomePage />
+            ) : (
+              <MainLayout>
+                <Footer />
+              </MainLayout>
+            )
+          }
+        />
+
+        {/* ================= ABOUT ================= */}
+        <Route
+          path="/about"
+          element={
+            <MainLayout>
+              <AboutPage />
+            </MainLayout>
+          }
+        />
+
+        {/* ================= CHECKOUT (PROTECTED) ================= */}
+        <Route
+          path="/checkout"
+          element={user ? <CheckoutPage /> : <Navigate to="/" replace />}
+        />
+
+        {/* ================= ORDER SUCCESS (PROTECTED) ================= */}
+        <Route
+          path="/order-success"
+          element={user ? <OrderSuccess /> : <Navigate to="/" replace />}
+        />
+
+        {/* ================= FALLBACK ================= */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );
